@@ -1,87 +1,77 @@
-# File Combiner
+# ToSingleFile (Python)
 
-A Python script to recursively combine files of a specified extension into a single output file, with flexible exclusion patterns and directory filtering. This can be useful for getting the codebase into a single file for analysis using LLM.
+<div align="center">
+    <img src="https://count.getloli.com/get/@ToSingleFilePython?theme=asoul&padding=4" alt="Visitor count"><br>
+</div>
 
-## Description
+**ToSingleFile** is a Python utility that recursively combines source code files into a single output file. Perfect for creating submissions, simplifying code reviews, or consolidating project artifacts.
 
-This tool searches through a directory (and its subdirectories) for files matching a specified extension, then combines their contents into one output file. It automatically excludes virtual environments (`venv` directories), the script itself, and the output file from processing. Users can specify additional exclusion patterns using glob syntax.
+## Features
+* **Extension Filtering**: Combine specific file types (`.py`, `.js`, etc.)
+* **Exclusion Patterns**: Skip files/directories using glob patterns
+* **Directory Traversal**: Recursive file discovery
+* **Relative Path Annotations**: Preserves original file locations as comments
+* **Automatic Exclusions**: Skips venv directories, script itself, and output file
+* **Cross-Platform**: Works on Windows, Linux, and macOS
+
+## Requirements
+* Python 3.6+
 
 ## Installation
-
-1. Ensure Python 3.x is installed on your system
-2. Download or clone this repository
-3. Place `combine_files.py` in your project directory or add it to your system PATH
+```bash
+git clone https://github.com/2dameneko/ToSingleFile
+```
 
 ## Usage
-
 ```bash
 python combine_files.py [folder_path] [output_file] [extension] [--exclude PATTERN]
 ```
 
-### Arguments
-- `folder_path`: Root directory to search (default: current working directory)
-- `output_file`: Name/path of the output file (default: `Combined.py`)
-- `extension`: File extension to include (including leading dot, default: `.py`)
-- `--exclude`/`-e`: Glob patterns to exclude files/directories (can be used multiple times)
-
-### Features
-- Recursive directory traversal
-- Automatic exclusion of:
-  - `venv` directories
-  - The script itself
-  - The specified output file
-- Custom exclusion patterns using glob syntax
-- Lexicographical sorting of files
-- UTF-8 encoding support
-- CRLF line endings for compatibility
-
-## Example Usage
-
-1. Basic usage (combine all Python files in current directory):
+### Basic Examples
+Combine all Python files in current directory:
 ```bash
 python combine_files.py
 ```
 
-2. Combine JavaScript files in `src` directory:
+Combine JavaScript files in specific directory:
 ```bash
-python combine_files.py src bundle.js .js
+python combine_files.py ./src combined.js .js
 ```
 
-3. Combine Markdown files while excluding test files:
+Combine files excluding tests:
 ```bash
-python combine_files.py docs Notes.md .md -e "*_test.md" -e "drafts/*"
+python combine_files.py --exclude "*_test.py" --exclude "tests/*"
 ```
 
-4. Custom output path with multiple exclusions:
-```bash
-python combine_files.py ./project /tmp/combined.txt .txt -e "temp/*" -e "backup/"
-```
+## Command Line Options
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `folder_path` | Root directory to search | Current directory |
+| `output_file` | Output filename | `Combined.py` |
+| `extension` | File extension to include (with leading dot) | `.py` |
+| `--exclude`/`-e` | Glob patterns to exclude files/directories (multiple allowed) | None |
 
-## Output Format
-
-Each included file will be preceded by a header showing its relative path:
+## Output Example
 ```python
-# File: path/to/file.py
-[file contents]
+# File: utils/helpers.py
+def greet():
+    print("Hello World")
+
+# File: main.py
+import utils.helpers
+helpers.greet()
 ```
 
-## Notes
+## Important Notes
+1. Always back up your code before combining
+2. Output file is overwritten automatically
+3. Exclusions are applied to relative paths
+4. Binary files are not supported
+5. Files are sorted lexicographically before combining
 
-- The script uses **CRLF** (`\r\n`) line endings for both headers and content separation
-- Excluded patterns are matched against relative paths from the root search directory
-- If no matching files are found, the script exits cleanly without creating an output file
-- Existing output files will be overwritten without confirmation
-
-## Error Handling
-
-The script will exit with an error message if:
-- The specified directory doesn't exist
-- It fails to delete an existing output file
-- It encounters file permission issues
-- Any I/O errors occur during processing
-
-## Requirements
-- Python 3.6+ (standard library only - no external dependencies)
+## Version Features
+* **0.1** (Initial Release):
+  - Core combining functionality 
 
 ## License
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
